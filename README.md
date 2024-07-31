@@ -1,7 +1,7 @@
 # TaskLit
 A side project to make good old task scheduler more lit to use. 
 
-## Nice to have features
+## Features
 1. Create basic task.
 2. Import task.
 3. Delete task.
@@ -15,4 +15,5 @@ A side project to make good old task scheduler more lit to use.
   - last_task_result
   - missed_runs
   - author
-7. Dependency
+7. Task dependency
+  - Feature to make it so a specific task is dependent on another task for running. 
