@@ -1,5 +1,11 @@
 import streamlit as st
+import win32com.client
 
+# Connect to Task Scheduler
+scheduler = win32com.client.Dispatch("Schedule.Service")
+scheduler.Connect()
+
+# Streamlit application
 st.title(":clock2: TaskLit")
 hcol1, hcol2, hcol3, hcol4 = st.columns(4)
 
