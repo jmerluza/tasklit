@@ -1,5 +1,6 @@
 import polars as pl
-
+import streamlit as st
+from tasklit.classes import TaskData
 
 def get_tasks_by_folder(
     scheduler_client, folder_name: str | None = None
@@ -11,17 +12,17 @@ def get_tasks_by_folder(
 
     folder = scheduler_client.GetFolder(folder_name)
 
-    df = {}
-    df["name"] = [task.Name for task in folder.GetTasks(0)]
-    df["description"] = [
-        task.Definition.RegistrationInfo.Description for task in folder.GetTasks(0)
-    ]
-    df["next_run_time"] = [task.NextRunTime for task in folder.GetTasks(0)]
-    df["last_run_time"] = [task.LastRunTime for task in folder.GetTasks(0)]
-    df["last_task_result"] = [task.LastTaskResult for task in folder.GetTasks(0)]
-    df["missed_runs"] = [task.NumberOfMissedRuns for task in folder.GetTasks(0)]
-    df["author"] = [
+    tasks = {}
+    tasks["name"] = [task.Name for task in folder.GetTasks(0)]
+    tasks["state"] = [task.State for task in folder.GetTasks(0)]
+    tasks["next_run_time"] = [task.NextRunTime for task in folder.GetTasks(0)]
+    tasks["last_run_time"] = [task.LastRunTime for task in folder.GetTasks(0)]
+    tasks["last_task_result"] = [task.LastTaskResult for task in folder.GetTasks(0)]
+    tasks["missed_runs"] = [task.NumberOfMissedRuns for task in folder.GetTasks(0)]
+    tasks["author"] = [
         task.Definition.RegistrationInfo.Author for task in folder.GetTasks(0)
     ]
 
-    return df
+    df = pl.DataFrame(tasks)
+
+    return TaskData(df)
