@@ -1,19 +1,7 @@
 import streamlit as st
 import pandas as pd
 import polars as pl
-import pythoncom
-import win32com.client
-
 from tasklit.components.components import create_task
-
-# from tasklit.functions.functions import get_tasks_by_folder
-
-# Connect to Task Scheduler
-pythoncom.CoInitialize()
-scheduler = win32com.client.Dispatch("Schedule.Service")
-
-if "client" not in st.session_state:
-    st.session_state["client"] = scheduler
 
 # =================================================================================================
 # Streamlit application
