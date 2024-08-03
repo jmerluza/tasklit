@@ -1,16 +1,21 @@
 import polars as pl
 import streamlit as st
+import pythoncom
+import win32com.client
 from tasklit.classes import TaskData
 
-def get_tasks_by_folder(
-    scheduler_client, folder_name: str | None = None
-) -> pl.DataFrame:
+def get_tasks_by_folder(folder_name: str | None = None) -> pl.DataFrame:
     if folder_name:
         folder_name = f"\{folder_name}"
     else:
         folder_name = "\\"
 
-    folder = scheduler_client.GetFolder(folder_name)
+    # Connect to Task Scheduler
+    pythoncom.CoInitialize()
+    scheduler = win32com.client.Dispatch("Schedule.Service")
+    scheduler.Connect()
+
+    folder = scheduler.GetFolder(folder_name)
 
     tasks = {}
     tasks["name"] = [task.Name for task in folder.GetTasks(0)]
@@ -24,5 +29,7 @@ def get_tasks_by_folder(
     ]
 
     df = pl.DataFrame(tasks)
+
+    pythoncom.CoUninitialize()
 
     return TaskData(df)

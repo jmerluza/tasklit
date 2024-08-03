@@ -1,7 +1,10 @@
 import streamlit as st
+import pythoncom
+import win32com.client
 import pandas as pd
 import polars as pl
-from tasklit.components.components import create_task
+from tasklit.components.create_task import create_task
+from tasklit.functions.functions import get_tasks_by_folder
 
 # =================================================================================================
 # Streamlit application
@@ -16,7 +19,6 @@ with button_col1:
 
 st.divider()
 
-
-# tasks = get_tasks_by_folder(scheduler, "ZBI_Tasks")
-# task_df = pl.DataFrame(tasks).to_pandas()
-# st.dataframe(task_df, hide_index=True, use_container_width=True)
+tasks = get_tasks_by_folder()
+task_df = pl.DataFrame(tasks).to_pandas()
+st.dataframe(task_df, hide_index=True, use_container_width=True)

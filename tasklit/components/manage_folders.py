@@ -1,0 +1,1 @@
+"""Component to manage folders in task scheduler"""
