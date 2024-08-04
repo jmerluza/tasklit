@@ -115,20 +115,15 @@ class ActionTypes:
     TASK_ACTION_SEND_EMAIL = 6
     TASK_ACTION_SHOW_MESSAGE = 7
 
-@dataclass
-class SuccessErrorCodes:
-    SUCCESS = 0  # The operation completed successfully (often means the task ran without errors).
-    GENERAL_FAILURE = 1  # Incorrect function (general failure, often indicating some error but not very specific).
-    FILE_NOT_FOUND = 2  # The system cannot find the file specified (often means the script or executable could not be found).
-    ENVIRON_FAILURE = 10  # The environment is incorrect (often means there was an issue with the system environment).
-    NOT_YET_RUN = 267011  # (0x00041303) The task has not yet run.
-    SCHEDULER_FAILURE = (
-        2147750687  # (0x8004131F) The task scheduler service is not available.
-    )
-    DEVICE_FAILURE = 2147943645  # (0x80070015) The device is not ready.
-    SYSTEM_FAILURE = (
-        2147942402  # (0x80070002) The system cannot find the file specified.
-    )
+TASK_RESULTS = {
+    0:"Operation completed successfully.",
+    1:"General failure.",
+    2:"The system cannot find the file specified.",
+    10:"System environment failure.",
+    267011:"The task has not yet run.",
+    2147750687:"Task scheduler is not available.",
+    2147943645:"The device is not ready.",
+}
 
 TASK_STATES = {
     0:"UNKNOWN",

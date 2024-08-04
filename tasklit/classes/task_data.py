@@ -1,5 +1,5 @@
 from typing import Literal
-from tasklit.constants import TASK_STATES
+from tasklit.constants import TASK_STATES, TASK_RESULTS
 import polars as pl
 
 
@@ -39,6 +39,37 @@ class TaskData(pl.DataFrame):
                     "state_description":"State Description",
                     "state":"State Code",
                     "count":"Number of Tasks"
+                }
+            )
+        )
+        return df
+    
+    def task_results(self):
+        df = (self.df
+            .with_columns(
+                pl.col("last_task_result").replace(TASK_RESULTS).alias("result_description").str.to_titlecase())
+            .group_by("result_description","last_task_result")
+            .agg(pl.col("last_task_result").count().alias("count"))
+            .rename(
+                {   
+                    "result_description":"Result Description",
+                    "last_task_result":"Result Code",
+                    "count":"Number of Tasks"
+                }
+            )
+        )
+        return df
+    
+    def task_by_author(self):
+        df = (self.df
+            .group_by("author")
+            .agg([pl.count("name"), pl.sum("missed_runs")])
+            .sort("author")
+            .rename(
+                {
+                    "author":"Author",
+                    "name":"Number of Tasks",
+                    "missed_runs":"Number of Missed Runs"
                 }
             )
         )
