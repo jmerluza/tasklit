@@ -4,7 +4,7 @@ import pythoncom
 import win32com.client
 from tasklit.classes import TaskData
 
-def get_tasks_by_folder(folder_name: str | None = None) -> pl.DataFrame:
+def get_tasks_by_folder(folder_name: str | None = None) -> TaskData:
     if folder_name:
         folder_name = f"\{folder_name}"
     else:
@@ -29,7 +29,5 @@ def get_tasks_by_folder(folder_name: str | None = None) -> pl.DataFrame:
     ]
 
     df = pl.DataFrame(tasks)
-
-    pythoncom.CoUninitialize()
 
     return TaskData(df)
