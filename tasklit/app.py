@@ -4,6 +4,7 @@ import win32com.client
 import pandas as pd
 import polars as pl
 from tasklit.components.create_task import create_task
+from tasklit.components.manage_folders import manage_folders
 from tasklit.functions.functions import get_tasks_by_folder, check_folder_exists
 
 # =================================================================================================
@@ -19,7 +20,7 @@ button_col1, button_col2, button_col3, button_col4, button_col5 = st.columns(5)
 with button_col1:
     st.button(label="Create Task", use_container_width=True, on_click=create_task)
 with button_col2:
-    st.button(label="Manage Folders", use_container_width=True)
+    st.button(label="Manage Folders", use_container_width=True, on_click=manage_folders)
 # =================================================================================================
 
 # =================================================================================================
