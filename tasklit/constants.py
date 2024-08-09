@@ -123,6 +123,7 @@ TASK_RESULTS = {
     267011:"The task has not yet run.",
     2147750687:"Task scheduler is not available.",
     2147943645:"The device is not ready.",
+    267009:"Task is currently running."
 }
 
 TASK_STATES = {
