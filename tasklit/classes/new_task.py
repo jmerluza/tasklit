@@ -1,4 +1,3 @@
-import win32com.client
 from datetime import datetime
 from tasklit.constants import TASK_TRIGGERS, ActionTypes, TaskCreation, TaskLogon
 
@@ -43,7 +42,6 @@ class NewTask:
 
         return trigger
     
-    
     def create_task_action(self, task_definition, action_file: str, action_arg: str|None='/c "exit"'):
         """Creates the actions for task."""
 
@@ -52,14 +50,14 @@ class NewTask:
         action.Arguments = action_arg
 
         return action
-    
+
     def create_task_information(self, task_definition, task_description: str):
         """Creates the information about the task."""
         task_definition.RegistrationInfo.Description = task_description
         task_definition.Settings.Enabled = True
         task_definition.Settings.StopIfGoingOnBatteries = False
         return task_definition
-    
+
     def create_new_task(self, task_definition, folder: str, task_name: str):
         """Registers the new task with task scheduler."""
         task_folder = self.scheduler.GetFolder(folder)
@@ -71,3 +69,4 @@ class NewTask:
             "", # no password
             TaskLogon.TASK_LOGON_NONE
         )
+
