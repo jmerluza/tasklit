@@ -1,3 +1,3 @@
-from .functions import get_tasks_by_folder, check_folder_exists
+from .functions import check_folder_exists, connect_to_task_scheduler
 
-__all__ = ["get_tasks_by_folder", "check_folder_exists"]
+__all__ = ["connect_to_task_scheduler", "check_folder_exists"]
