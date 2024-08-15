@@ -38,7 +38,7 @@ class TaskFrame(pl.DataFrame):
         )
         return df
 
-    def tasklit_taskframe(self):
+    def tasklit_taskframe(self, folder_name: str|None=None):
         """Changes the task frame to a streamlit data frame to display on the app."""
         select_cols = [
             "name",
@@ -57,8 +57,13 @@ class TaskFrame(pl.DataFrame):
             "Missed Runs"
         ]
 
+        if folder_name:
+            df = self.df.filter(pl.col("folder_name")==folder_name)
+        else:
+            df = self.df
+
         df = st.dataframe(
-            (self.df
+            (df
                 .select(select_cols)
                 .rename(dict(zip(select_cols, rename_cols)))
             ),

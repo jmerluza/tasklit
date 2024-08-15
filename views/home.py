@@ -1,36 +1,51 @@
 import streamlit as st
+import polars as pl
 
-number_of_tasks = st.session_state.tasks_df.total_number_of_tasks()
-number_of_missed_runs = st.session_state.tasks_df.total_number_of_missed_runs()
 number_of_running_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("RUNNING")
 number_of_ready_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("READY")
+number_of_missed_runs = st.session_state.tasks_df.total_number_of_missed_runs()
 number_of_disabled_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("DISABLED")
 
-metric_col1, metric_col2, metric_col3, metric_col4, metric_col5, metric_col6 = st.columns([0.15,0.15,0.15,0.15,0.15,0.25])
+folder_select_col1, folder_select_col2 = st.columns([0.3,0.7])
+with folder_select_col1:
+    folder_select = st.selectbox("Select folder", options=st.session_state.folder_options)
 
+metric_col1, metric_col2, metric_col3 = st.columns([0.1,0.1,0.8])
 with metric_col1:
     with st.container(border=True):
-        st.metric("NUMBER OF TASKS", number_of_tasks)
+        st.metric(":blue[:material/sprint: RUNNING TASKS]", number_of_running_tasks)
+    with st.container(border=True):
+        st.metric(":green[:material/check_circle: READY TASKS]", number_of_ready_tasks)
+    
 with metric_col2:
     with st.container(border=True):
         st.metric(":red[:material/running_with_errors: MISSED RUNS]", number_of_missed_runs)
-with metric_col3:
-    with st.container(border=True):
-        st.metric(":blue[:material/sprint: RUNNING TASKS]", number_of_running_tasks)
-with metric_col4:
-    with st.container(border=True):
-        st.metric(":green[:material/check_circle: READY TASKS]", number_of_ready_tasks)
-with metric_col5:
     with st.container(border=True):
         st.metric(":orange[:material/do_not_disturb: DISABLED TASKS]", number_of_disabled_tasks)
 
-table_col1, table_col2 = st.columns([0.3,0.7])
+with metric_col3:
+    st.session_state.tasks_df.tasklit_taskframe(folder_name=folder_select)
 
-with table_col1:
-    st.session_state.tasks_df.group_by_last_run_results()
+st.divider()
 
-with table_col2:
-    st.session_state.tasks_df.tasklit_taskframe()
+task_options = (st.session_state.tasks_df
+    .filter(pl.col("folder_name")==folder_select)
+    ["name"].unique(maintain_order=True).to_list()
+)
+task_select_col1, task_select_col2 = st.columns([0.3,0.7])
+with task_select_col1:
+    task_select = st.selectbox(
+        "Select task",
+        options=task_options)
+
+# table_col1, table_col2 = st.columns([0.3,0.7])
+
+# with table_col1:
+#     folder_select = st.selectbox("Select folder", options=st.session_state.folder_options)
+#     # st.session_state.tasks_df.group_by_last_run_results()
+
+# with table_col2:
+#     st.session_state.tasks_df.tasklit_taskframe()
 
 # folder_pane, tasks_pane, actions_pane = st.columns([0.15,0.65,0.10])
 
