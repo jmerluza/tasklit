@@ -43,22 +43,27 @@ with filter_col2:
     )
     folder_select = st.selectbox("Select folder", options=folder_options)
 
-metric_col1, metric_col2, metric_col3 = st.columns([0.1,0.1,0.8])
+metric_col1, metric_col2, metric_col3, metric_col4, metric_col5 = st.columns([0.1,0.1,0.1,0.1,0.6])
 with metric_col1:
     with st.container(border=True):
         st.metric(":blue[:material/sprint: RUNNING TASKS]", number_of_running_tasks)
-    with st.container(border=True):
-        st.metric(":green[:material/check_circle: READY TASKS]", number_of_ready_tasks)
-    
 with metric_col2:
     with st.container(border=True):
+        st.metric(":green[:material/check_circle: READY TASKS]", number_of_ready_tasks)
+with metric_col3:
+    with st.container(border=True):
         st.metric(":red[:material/running_with_errors: MISSED RUNS]", number_of_missed_runs)
+with metric_col4:
     with st.container(border=True):
         st.metric(":orange[:material/do_not_disturb: DISABLED TASKS]", number_of_disabled_tasks)
 
-with metric_col3:
-    (st.session_state.tasks_df
-        .tasklit_taskframe(author=author_filter, folder_name=folder_select)
+
+
+(st.session_state.tasks_df
+    .tasklit_taskframe(
+        author=author_filter,
+        folder_name=folder_select
     )
+)
 
 st.divider()

@@ -152,3 +152,10 @@ DAYS_OF_WEEK = {
     "Friday":32,
     "Saturday":64
 }
+
+TASK_INSTANCES_POLICY = {
+    0:"Starts a new instance while an existing instance of the task is running.",
+    1:"Starts a new instance of the task after all other instances of the task are complete.",
+    2:"Does not start a new instance if an existing instance of the task is running.",
+    3:"Stops an existing instance of the task before it starts a new instance."
+}
