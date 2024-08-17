@@ -1,3 +1,4 @@
+import os
 import polars as pl
 import streamlit as st
 from tasklit.constants import TASK_STATES, TASK_RESULTS
@@ -19,11 +20,11 @@ class TaskFrame(pl.DataFrame):
     def total_number_of_missed_runs(self):
         """Counts the total number of missed runs."""
         return self.df["missed_runs"].sum()
-    
+
     def total_number_of_tasks_by_state(self, state: str):
         """Counts the total number of tasks by state."""
         return self.df.filter(pl.col("state")==state).shape[0]
-    
+
     def group_by_last_run_results(self):
         """The number of tasks by last results."""
         res = (self.df
@@ -38,7 +39,10 @@ class TaskFrame(pl.DataFrame):
         )
         return df
 
-    def tasklit_taskframe(self, folder_name: str|None=None):
+    def tasklit_taskframe(self,
+        author: str,
+        folder_name: str|None=None
+    ):
         """Changes the task frame to a streamlit data frame to display on the app."""
         select_cols = [
             "name",
@@ -58,7 +62,10 @@ class TaskFrame(pl.DataFrame):
         ]
 
         if folder_name:
-            df = self.df.filter(pl.col("folder_name")==folder_name)
+            df = self.df.filter(
+                (pl.col("author").str.contains(author)) &
+                (pl.col("folder_name")==folder_name)
+            )
         else:
             df = self.df
 

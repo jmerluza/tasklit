@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import polars as pl
 
@@ -6,9 +7,12 @@ number_of_ready_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state
 number_of_missed_runs = st.session_state.tasks_df.total_number_of_missed_runs()
 number_of_disabled_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("DISABLED")
 
-folder_select_col1, folder_select_col2 = st.columns([0.3,0.7])
-with folder_select_col1:
+filter_col1, filter_col2, filter_col3 = st.columns([0.2,0.2,0.6])
+with filter_col1:
+    author_filter = st.text_input("Task Author", value=os.getlogin())
+with filter_col2:
     folder_select = st.selectbox("Select folder", options=st.session_state.folder_options)
+
 
 metric_col1, metric_col2, metric_col3 = st.columns([0.1,0.1,0.8])
 with metric_col1:
@@ -28,15 +32,15 @@ with metric_col3:
 
 st.divider()
 
-task_options = (st.session_state.tasks_df
-    .filter(pl.col("folder_name")==folder_select)
-    ["name"].unique(maintain_order=True).to_list()
-)
-task_select_col1, task_select_col2 = st.columns([0.3,0.7])
-with task_select_col1:
-    task_select = st.selectbox(
-        "Select task",
-        options=task_options)
+# task_options = (st.session_state.tasks_df
+#     .filter(pl.col("folder_name")==folder_select)
+#     ["name"].unique(maintain_order=True).to_list()
+# )
+# task_select_col1, task_select_col2 = st.columns([0.3,0.7])
+# with task_select_col1:
+#     task_select = st.selectbox(
+#         "Select task",
+#         options=task_options)
 
 # table_col1, table_col2 = st.columns([0.3,0.7])
 

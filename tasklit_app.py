@@ -1,4 +1,6 @@
+import os
 import streamlit as st
+import polars as pl
 from tasklit.functions.functions import connect_to_task_scheduler
 from tasklit.frames import get_tasks
 
@@ -18,22 +20,45 @@ if "tasks_df" not in st.session_state:
     st.session_state.tasks_df = get_tasks()
 
 # initialize folder list options.
-if "folder_options" not in st.session_state:
-    st.session_state.folder_options = st.session_state.tasks_df["folder_name"].unique(maintain_order=True).to_list()
+# if "folder_options" not in st.session_state:
+#     st.session_state.folder_options = st.session_state.tasks_df["folder_name"].unique(maintain_order=True).to_list()
 
 scheduler = st.session_state.scheduler_client
 
-home_page = st.Page("views/home.py", title="Home page", icon=":material/home:")
-# create_task_page = st.Page("views/create_task.py", title="Create task", icon=":material/schedule:")
-# manage_task_page = st.Page("views/manage_task.py", title="Manage task", icon=":material/more_time:")
-# manage_folder_page = st.Page("views/manage_folder.py", title="Manage folder", icon=":material/folder_open:")
+number_of_running_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("RUNNING")
+number_of_ready_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("READY")
+number_of_missed_runs = st.session_state.tasks_df.total_number_of_missed_runs()
+number_of_disabled_tasks = st.session_state.tasks_df.total_number_of_tasks_by_state("DISABLED")
 
-nav = st.navigation(
-    {
-        "Home": [home_page],
-        # "Folder Actions": [manage_folder_page],
-        # "Task Actions": [create_task_page, manage_task_page]
-    }
-)
+filter_col1, filter_col2, filter_col3 = st.columns([0.2,0.2,0.6])
+with filter_col1:
+    author_filter = st.text_input("Task Author", value=os.getlogin())
+with filter_col2:
+    folder_options = (
+        get_tasks()
+        .filter(pl.col("author").str.contains(author_filter))
+        ["folder_name"]
+        .unique(maintain_order=True)
+        .to_list()
+    )
+    folder_select = st.selectbox("Select folder", options=folder_options)
 
-nav.run()
+metric_col1, metric_col2, metric_col3 = st.columns([0.1,0.1,0.8])
+with metric_col1:
+    with st.container(border=True):
+        st.metric(":blue[:material/sprint: RUNNING TASKS]", number_of_running_tasks)
+    with st.container(border=True):
+        st.metric(":green[:material/check_circle: READY TASKS]", number_of_ready_tasks)
+    
+with metric_col2:
+    with st.container(border=True):
+        st.metric(":red[:material/running_with_errors: MISSED RUNS]", number_of_missed_runs)
+    with st.container(border=True):
+        st.metric(":orange[:material/do_not_disturb: DISABLED TASKS]", number_of_disabled_tasks)
+
+with metric_col3:
+    (st.session_state.tasks_df
+        .tasklit_taskframe(author=author_filter, folder_name=folder_select)
+    )
+
+st.divider()
