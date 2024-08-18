@@ -153,9 +153,38 @@ DAYS_OF_WEEK = {
     "Saturday":64
 }
 
+# TASK_INSTANCES_POLICY = {
+#     0:"Starts a new instance while an existing instance of the task is running.",
+#     1:"Starts a new instance of the task after all other instances of the task are complete.",
+#     2:"Does not start a new instance if an existing instance of the task is running.",
+#     3:"Stops an existing instance of the task before it starts a new instance."
+# }
+
 TASK_INSTANCES_POLICY = {
-    0:"Starts a new instance while an existing instance of the task is running.",
-    1:"Starts a new instance of the task after all other instances of the task are complete.",
-    2:"Does not start a new instance if an existing instance of the task is running.",
-    3:"Stops an existing instance of the task before it starts a new instance."
+    "Run a new instance in parallel": 0,
+    "Queue a new instance":1,
+    "Do not start a new instance":2,
+    "Stop the existing instance":3
+}
+
+TASK_RESTART_INTERVALS = {
+    "1 minute":"PT1M",
+    "5 minutes":"PT5M",
+    "10 minutes":"PT10M",
+    "15 minutes":"PT15M",
+    "30 minutes":"PT30M",
+    "1 hour":"PT1H",
+    "2 hours":"PT2H"
+}
+
+TASK_EXECUTION_LIMIT = {
+    "1 hour":"PT1H",
+    "2 hours":"PT2H",
+    "4 hours":"PT4H",
+    "6 hours":"PT6H",
+    "8 hours":"PT8H",
+    "12 hours":"PT12H",
+    "1 day":"PT1D",
+    "3 days":"PT3D",
+
 }

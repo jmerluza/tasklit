@@ -38,11 +38,19 @@ class TaskFrame(pl.DataFrame):
             use_container_width=True,
         )
         return df
+    
+    def filter_author_and_task_name(self, author: str, folder_name: str|None=None):
+        """Filters the task frame by author and task name."""
+        if folder_name:
+            df = self.df.filter(
+                (pl.col("author").str.contains(author)) &
+                (pl.col("folder_name")==folder_name)
+            )
+        else:
+            df = self.df
+        return TaskFrame(df)
 
-    def tasklit_taskframe(self,
-        author: str,
-        folder_name: str|None=None
-    ):
+    def tasklit_taskframe(self):
         """Changes the task frame to a streamlit data frame to display on the app."""
         select_cols = [
             "name",
@@ -61,16 +69,10 @@ class TaskFrame(pl.DataFrame):
             "Missed Runs"
         ]
 
-        if folder_name:
-            df = self.df.filter(
-                (pl.col("author").str.contains(author)) &
-                (pl.col("folder_name")==folder_name)
-            )
-        else:
-            df = self.df
+        
 
         df = st.dataframe(
-            (df
+            (self.df
                 .select(select_cols)
                 .rename(dict(zip(select_cols, rename_cols)))
             ),

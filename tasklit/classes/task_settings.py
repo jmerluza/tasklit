@@ -19,6 +19,7 @@ class TaskSettings:
         """
         settings = {
             "AllowDemandStart": self.task_settings.AllowDemandStart,
+            "StartWhenAvailable": self.task_settings.StartWhenAvailable,
             "Enabled": self.task_settings.Enabled,
             "Hidden": self.task_settings.Hidden,
             "RestartInterval": self.task_settings.RestartInterval,
@@ -32,6 +33,7 @@ class TaskSettings:
     def update_task_settings(
         self,
         allow_demand_start: bool,
+        start_when_available: bool,
         enabled: bool,
         hidden: bool,
         restart_interval: bool,
@@ -41,6 +43,7 @@ class TaskSettings:
     ):
         """Updates the settings of a task."""
         self.task_settings.AllowDemandStart = allow_demand_start
+        self.task_settings.StartWhenAvailable = start_when_available
         self.task_settings.Enabled = enabled
         self.task_settings.Hidden = hidden
         self.task_settings.RestartInterval = restart_interval

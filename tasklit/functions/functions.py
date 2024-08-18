@@ -23,3 +23,21 @@ def check_folder_exists(folder_name: str):
             return True
         else:
             return False
+        
+def get_task_definition(folder_name: str, task_name: str):
+    """Get task definition by task name.
+    
+    Parameters:
+        folder_name (`str`): Folder name.
+        task_name (`str`): Name of task within the folder.
+    """
+    folder = st.session_state.scheduler_client.GetFolder(folder_name)
+    task = folder.GetTask(task_name)
+    task_definition = task.Definition
+    return task_definition
+
+def create_task_definition():
+    """Create a new task definition. Used for creating a new task."""
+    task_definition = st.session_state.scheduler_client.NewTask(0)
+    return task_definition
+    
