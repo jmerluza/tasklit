@@ -1,6 +1,5 @@
+import os
 import streamlit as st
-import tkinter as tk
-from tkinter import filedialog
 from pytask_scheduler.constants import TaskTriggerTypes, MonthlyTriggerValues
 
 def start_date_time():
@@ -240,22 +239,15 @@ def onetime_trigger_fields():
     st.write("_This task will run once on a specified date and time._")
     start_date_time()
 
-def file_picker() -> str:
-    root = tk.Tk()
-    fpath = filedialog.askopenfilename(
-        title="Select a File",
-        filetypes=[
-            ("Batch files", "*.bat"),
-            ("All files", "*.*")
-        ]
-    )
-    root.withdraw()
-    return fpath
-
 def task_action_fields():
     st.write("_:material/warning: Only support for creating an execution action that \
-             runs a batch file._")
-    
+             runs a batch file. Currently, the streamlit `file_uploader` widget is limited \
+             in what it returns. Please copy the file link to the batch job and paste it in \
+             the text field below._")
+
+    st.session_state.ntask_action_path = st.text_input("File Path")
+    if not os.path.exists(rf"{st.session_state.ntask_action_path}"):
+        raise ValueError("File path does not exist.")
 
 st.header(":material/add_circle: Create New Task")
 with st.expander("Instructions"):
@@ -299,3 +291,8 @@ with st.container(border=True):
 st.header(":material/action_key: Task Action")
 with st.container(border=True):
     task_action_fields()
+
+st.divider()
+st.button(
+    label="Submit"
+)
