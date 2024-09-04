@@ -61,3 +61,20 @@ class TasksDataFrame(pl.DataFrame):
 
         df = next_df.vstack(last_df)
         return TasksDataFrame(df)
+
+class HistoryDataFrame(pl.DataFrame):
+    def __init__(self, data: pl.DataFrame):
+        super().__init__(data)
+        self.df = data
+
+    def preprocess(self):
+        df = (self.df
+            .rename({
+                "event_created_time":"Event Created",
+                "event_level":"Event Level",
+                "event_id":"Event ID",
+                "task_name":"Task Name",
+                "event_id_description":"Event ID Description",
+                "event_log_description":"Event Log Description"
+            })      
+        )
