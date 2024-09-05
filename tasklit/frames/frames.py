@@ -68,6 +68,7 @@ class HistoryDataFrame(pl.DataFrame):
         self.df = data
 
     def preprocess(self):
+        """Preprocessing for the historical data frame."""
         df = (self.df
             .rename({
                 "event_created_time":"Event Created",
@@ -76,5 +77,14 @@ class HistoryDataFrame(pl.DataFrame):
                 "task_name":"Task Name",
                 "event_id_description":"Event ID Description",
                 "event_log_description":"Event Log Description"
-            })      
+            }) 
+            .with_columns(
+                pl.col("Event Created").cast(pl.Date),
+                pl.col("Event Level").cast(pl.Int64),
+                pl.col("Event ID").cast(pl.Int64)
+            )
         )
+        return HistoryDataFrame(df)
+    
+    def get_todays_history(self):
+        pass

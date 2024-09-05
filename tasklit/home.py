@@ -1,6 +1,8 @@
 import streamlit as st
 import polars as pl
-st.header("Tasks Scheduled Today")
+from frames.frames import HistoryDataFrame
+
+st.header("Tasks Scheduled for Today")
 
 # =================================================================================================
 # Total Metrics
@@ -48,8 +50,7 @@ with metric_col2:
             st.session_state.today_tasks.count_task_by_state(1),
             label_visibility="collapsed"
         )
-    
-    
+
 with metric_col3:
     with st.container(border=True):
         st.write(":blue[:material/today: SCHEDULED TO RUN]")
@@ -67,24 +68,42 @@ with metric_col3:
             st.session_state.today_tasks.count_task_by_state(2),
             label_visibility="collapsed"
         )
-    
 
-task_list = (st.session_state.today_tasks
-    .select(
-        "name",
-        "task_state_definition",
-        "next_run_time",
-        "last_run_time",
-        "last_task_result_definition"
-    )
-    .rename({
-        "name":"NAME",
-        "task_state_definition":"STATE",
-        "next_run_time":"NEXT RUN TIME",
-        "last_run_time":"LAST RUN TIME",
-        "last_task_result_definition":"LAST TASK RESULT"
-    })
-    .sort("NAME")
-)
+st.header("Task Statistics for Today")
+st.divider()
 
-st.dataframe(task_list, hide_index=True)
+hist_df = HistoryDataFrame(st.session_state.task_history).preprocess()
+stat_col1, stat_col2, stat_col3 = st.columns(3)
+with stat_col1:
+    st.write("_ERRORS_")
+    with st.container(border=True):
+        st.subheader(f":rotating_light: ")
+
+with stat_col2:
+    st.write("_WARNING_")
+    with st.container(border=True):
+        st.subheader(f":warning: ")
+
+with stat_col3:
+    st.write("_INFORMATION_")
+    with st.container(border=True):
+        st.subheader(f":information_source: ")
+# task_list = (st.session_state.today_tasks
+#     .select(
+#         "name",
+#         "task_state_definition",
+#         "next_run_time",
+#         "last_run_time",
+#         "last_task_result_definition"
+#     )
+#     .rename({
+#         "name":"NAME",
+#         "task_state_definition":"STATE",
+#         "next_run_time":"NEXT RUN TIME",
+#         "last_run_time":"LAST RUN TIME",
+#         "last_task_result_definition":"LAST TASK RESULT"
+#     })
+#     .sort("NAME")
+# )
+
+# st.dataframe(task_list, hide_index=True)

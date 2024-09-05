@@ -1,5 +1,5 @@
 import streamlit as st
-from pytask_scheduler import TaskScheduler
+from pytask_scheduler import TaskScheduler, get_task_scheduler_history
 from frames.frames import TasksDataFrame
 
 st.set_page_config(page_title="TaskLit", layout="centered", initial_sidebar_state="expanded")
@@ -7,22 +7,21 @@ st.title(":orange[:material/local_fire_department:] :red[TaskLit]")
 # =================================================================================================
 # Initializations
 # =================================================================================================
-
 # initialize task scheduler object.
 if "ts_object" not in st.session_state:
     st.session_state.ts_object = TaskScheduler()
-
 # initialize task data frame.
 if "task_data" not in st.session_state:
     st.session_state.task_data = TasksDataFrame(st.session_state.ts_object.get_all_tasks()).preprocess()
-
 # initialize lists
 if "folders" not in st.session_state:
     st.session_state.folders = st.session_state.ts_object.folders
-
 # initialize task data frame for todays tasks.
 if "today_tasks" not in st.session_state:
     st.session_state.today_tasks = st.session_state.task_data.get_tasks_scheduled_by_date()
+
+if "task_history" not in st.session_state:
+        st.session_state.task_history = get_task_scheduler_history()
 
 # ===================================================
 # New Task
