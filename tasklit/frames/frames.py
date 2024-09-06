@@ -79,12 +79,32 @@ class HistoryDataFrame(pl.DataFrame):
                 "event_log_description":"Event Log Description"
             }) 
             .with_columns(
-                pl.col("Event Created").cast(pl.Date),
+                pl.col("Event Created").str.strptime(pl.Datetime,"%Y-%m-%d %H:%M:%S%.6f"),
                 pl.col("Event Level").cast(pl.Int64),
                 pl.col("Event ID").cast(pl.Int64)
             )
         )
         return HistoryDataFrame(df)
-    
+
     def get_todays_history(self):
-        pass
+        """Filter the history data frame based on today's date."""
+        df = self.df.filter(
+            pl.col("Event Created").cast(pl.Date)==datetime.today().date()
+        )
+        return HistoryDataFrame(df)
+
+    def __event_count_by_criteria(self, filter_col: str, filter_criteria: str) -> int:
+        """Counts the number of events based on the filter column and criteria."""
+        return self.df.filter(pl.col(filter_col)==filter_criteria).shape[0]
+
+    def information_event_count(self) -> int:
+        """Returns the count of information events."""
+        return self.__event_count_by_criteria("Event Log Description","INFORMATION")
+
+    def error_event_count(self) -> int:
+        """Returns the count of error events."""
+        return self.__event_count_by_criteria("Event Log Description","ERROR")
+
+    def warning_event_count(self) -> int:
+        """Returns the count of warning events."""
+        return self.__event_count_by_criteria("Event Log Description","WARNING")
