@@ -9,16 +9,16 @@ from components.create_page import (
 )
 
 st.header(":material/add_circle: Create New Task")
-with st.expander("Instructions"):
+with st.expander("Instructions", icon="ℹ️"):
     st.write(
         """
-        1. Select a folder for the new task to be in.
-        2. Create a name for the task.
+        1. Select folder.
+        2. Create a task name.
         3. Enter task description.
         4. Choose a trigger type.
-        5. Choose an action type. (only execution of a batch file is currently implemented.)
+        5. Choose an action type.
         6. Configure task settings.
-        7. Click create.
+        7. Create task.
         """
     )
 

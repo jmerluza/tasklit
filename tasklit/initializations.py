@@ -1,7 +1,6 @@
 import streamlit as st
 import pythoncom
 from pytask_scheduler import TaskScheduler, get_task_scheduler_history
-from frames.frames import TasksDataFrame, HistoryDataFrame
 
 def initialize_app_objects():
     """Initializes the application objects that are used throughout the app.
@@ -17,14 +16,13 @@ def initialize_app_objects():
     if "ts_object" not in st.session_state:
         st.session_state.ts_object = TaskScheduler()
     if "task_data" not in st.session_state:
-        st.session_state.task_data = TasksDataFrame(st.session_state.ts_object.get_all_tasks()).preprocess()
+        st.session_state.task_data = st.session_state.ts_object.get_all_tasks().preprocess()
     if "folders" not in st.session_state:
         st.session_state.folders = st.session_state.ts_object.folders
-    if "today_tasks" not in st.session_state:
-        st.session_state.today_tasks = st.session_state.task_data.get_tasks_scheduled_by_date()
+    if "tasks_completed_today" not in st.session_state:
+        st.session_state.tasks_completed_today = st.session_state.task_data.get_tasks_completed_today()
     if "task_history" not in st.session_state:
-        hist = get_task_scheduler_history()
-        st.session_state.task_history = HistoryDataFrame(hist).preprocess()
+        st.session_state.task_history = get_task_scheduler_history().get_todays_history()
 
 def initialize_new_task_variables():
     """Initializes the variables for creating a new task."""
