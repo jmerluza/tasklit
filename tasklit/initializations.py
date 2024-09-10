@@ -24,6 +24,7 @@ def initialize_app_objects():
     if "task_history" not in st.session_state:
         st.session_state.task_history = get_task_scheduler_history().get_todays_history()
 
+
 def initialize_new_task_variables():
     """Initializes the variables for creating a new task."""
     if "ntask_start_date" not in st.session_state:
